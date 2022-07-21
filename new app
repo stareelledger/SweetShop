@@ -1,0 +1,272 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.List;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import com.spring.project.sweetshop.dao.AdminDao;
+import com.spring.project.sweetshop.dao.CustomerDao;
+import com.spring.project.sweetshop.dao.SweetDao;
+import com.spring.project.sweetshop.entities.Admin;
+import com.spring.project.sweetshop.entities.Customer;
+import com.spring.project.sweetshop.entities.Sweet;
+
+//Main App Class
+public class App 
+{	//Main method
+    public static void main( String[] args )throws Exception 
+    
+    {	
+    	//Available options
+    	ApplicationContext context=new ClassPathXmlApplicationContext("config.xml");
+        AdminDao adminDao=context.getBean("adminDao",AdminDao.class);
+        CustomerDao customerDao=context.getBean("customerDao",CustomerDao.class);
+        SweetDao sweetDao=context.getBean("sweetDao",SweetDao.class);
+        boolean b=true;
+        while(b) {
+        System.out.println("Welcome to the SweetApplication");
+        System.out.println("=========================================================");
+    	System.out.println("Log in as:");
+    	System.out.println("1)Admin");
+    	System.out.println("2)Customer");
+    	System.out.println("3)Exit");
+    	BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+
+    	int i=Integer.parseInt(br.readLine());
+    	if(i==1) {
+            try {
+            	System.out.println("Welcome to the Admin");
+    	        System.out.println("=========================================================");
+
+        		System.out.println("Enter admin id:");
+        		int id=Integer.parseInt(br.readLine());
+        		System.out.println("Enter admin name:");
+        		String name=br.readLine();
+        		System.out.println("Enter admin password:");
+        		String password=br.readLine();
+        		Admin admin=adminDao.getAdmin(id);
+        		System.out.println(admin.getAdpassword());
+        		
+        		if(admin.getAdpassword().equals(password)) {
+        			System.out.println("Admin: "+name+" log in successfull");
+        			boolean p=true;
+        			while(p) {
+        			System.out.println("1) Add another Admin");
+        			System.out.println("2) Update Admin");
+        			System.out.println("3) Delete Admin");
+        			System.out.println("4) Add Sweet");
+        			System.out.println("5) Update Sweet");
+        			System.out.println("6) Delete Sweet");
+        			System.out.println("7) Log out");
+        			
+        			int n=Integer.parseInt(br.readLine());
+        			switch(n) {
+        			case 1:
+        				System.out.println("Enter new admin id:");
+                		int newid=Integer.parseInt(br.readLine());
+                		System.out.println("Enter new admin name:");
+                		String newname=br.readLine();
+                		System.out.println("Enter new admin password:");
+                		String newpassword=br.readLine();
+                		Admin newadmin=new Admin(newid,newname,newpassword);
+                		adminDao.insert(newadmin);
+                		System.out.println("New Admin Inserted");
+                		break;
+        			case 2:
+        				System.out.println("Enter updated admin id:");
+                		int updatedid=Integer.parseInt(br.readLine());
+                		System.out.println("Enter updated admin name:");
+                		String updatedname=br.readLine();
+                		System.out.println("Enter updated admin password:");
+                		String updatedpassword=br.readLine();
+                		Admin updatedadmin=new Admin(updatedid,updatedname,updatedpassword);
+                		adminDao.updateAdmin(updatedadmin);
+                		System.out.println("Admin Updated");
+                		break;
+        			case 3:
+        				System.out.println("Enter admin id:");
+                		int delid=Integer.parseInt(br.readLine());
+                		adminDao.deleteAdmin(delid);
+                		System.out.println("Admin Deleted");
+                		break;
+        			case 4:
+        				System.out.println("Enter new sweet id:");
+                		int swid=Integer.parseInt(br.readLine());
+        				System.out.println("Enter new sweet category:");
+                		String category=br.readLine();
+                		System.out.println("Enter new sweet product:");
+                		String product=br.readLine();
+                		System.out.println("Enter new sweet rate:");
+                		int rate=Integer.parseInt(br.readLine());
+                		System.out.println("Enter new sweet offer:");
+                		int offer=Integer.parseInt(br.readLine());
+                		Sweet sweet=new Sweet(swid,category,product,rate,offer);
+                		sweetDao.insert(sweet);
+                		System.out.println("New Sweet Inserted");
+                		break;
+        			case 5:
+        				System.out.println("Enter new sweet offer:");
+                		int sid=Integer.parseInt(br.readLine());
+        				System.out.println("Enter new sweet category:");
+                		String scategory=br.readLine();
+                		System.out.println("Enter new sweet product:");
+                		String sproduct=br.readLine();
+                		System.out.println("Enter new sweet rate:");
+                		int srate=Integer.parseInt(br.readLine());
+                		System.out.println("Enter new sweet offer:");
+                		int soffer=Integer.parseInt(br.readLine());
+                		Sweet ssweet=new Sweet(sid,scategory,sproduct,srate,soffer);
+                		sweetDao.updateSweet(ssweet);
+                		System.out.println("Sweet Update");
+                		break;
+        			case 6:
+        				System.out.println("Enter Sweet Id:");
+                		Integer categ = Integer.parseInt(br.readLine());
+                		sweetDao.deleteSweet(categ);
+                		System.out.println("Sweet Deleted");
+                		break;
+        			case 7:
+        	    		System.out.println("Admin Logging Out");
+
+        				b=false;
+        				break;
+        			default:
+        				System.out.println("Wrong options");
+        				break;
+        				
+        			}
+
+        		}
+        		
+        		}
+        		else {
+                	System.out.println("wrong admin password");
+                }
+        }
+        catch(Exception e){
+        	
+        System.out.println(e);
+
+    }
+
+    	}
+    	else if(i==2) {
+    		//Starting Admin Project
+    		System.out.println("Welcome to the Sweet Shop");
+	        System.out.println("=========================================================");
+
+	        System.out.println("1)New User");
+	        System.out.println("2)Old User");
+	      
+	            try {
+	            	  int n=Integer.parseInt(br.readLine());
+	            	if(n==1) {
+	    	        	System.out.println("Enter new customer id:");
+	            		int id=Integer.parseInt(br.readLine());
+	            		System.out.println("Enter new customer name:");
+	            		String name=br.readLine();
+	            		System.out.println("Enter new customer password:");
+	            		String password=br.readLine();
+	            		Customer customer=new Customer(id,name,password);
+	            		System.out.println(customerDao.insert(customer));
+	            		System.out.println("New customer inserted");
+	            		
+	    	        }
+	            	
+	            		System.out.println("Give Login info:");
+	            		System.out.println("Enter customer id:");
+	            		int id=Integer.parseInt(br.readLine());
+	            		System.out.println("Enter customer name:");
+	            		String name=br.readLine();
+	            		System.out.println("Enter customer password:");
+	            		String password=br.readLine();
+	            		Customer customer=customerDao.getCustomer(id);
+	            		
+	            		if(customer.getCustpass().equals(password)) {
+	            			System.out.println("Customer: "+name+" log in successfull");
+	            			boolean p=true;
+	            			while(p) {
+	            			System.out.println("1) View all sweets info");
+	            			System.out.println("2) View all sweet products");
+	            			System.out.println("3) View all sweet categories");
+	            			System.out.println("4) View one sweet info based on sweet Id");
+	            			System.out.println("5) Exit");
+
+	            			
+	            		
+	            			int r=Integer.parseInt(br.readLine());
+	            			switch(r) {
+	            			case 1:
+	            				List<Sweet> allSweets=sweetDao.getAllSweets();
+	                    		for(Sweet obj:allSweets) {
+	                    			System.out.println("________________________________________");
+	                    			System.out.println("Category: " +obj.getCategory());
+	                    			System.out.println("Product: " +obj.getProduct());
+	                    			System.out.println("Rate: " +obj.getRate());
+	                    			System.out.println("Offer: " +obj.getOffer());
+	                    			System.out.println("________________________________________");
+	                    		}
+	                    		break;
+	            			case 2:
+	            				List<Sweet> allProduct=sweetDao.getAllSweets();
+	            				System.out.println("All Products");
+	            				System.out.println("________________________________________");
+	                    		for(Sweet obj:allProduct) {
+	                    			System.out.println( obj.getProduct());
+	                    			
+	                    		}
+	                    		System.out.println("________________________________________");
+	                    		break;
+	            			case 3:
+	            				List<Sweet> allCategory=sweetDao.getAllSweets();
+	            				System.out.println("All Category");
+	            				System.out.println("________________________________________");
+	            				for(Sweet obj:allCategory) {
+	                    			System.out.println(obj.getCategory());
+	                    			
+	                    		}
+	                    		System.out.println("________________________________________");
+	                    		break;
+	            			case 4:
+	            				System.out.println("Enter Sweet Id ");
+	            				int a=Integer.parseInt(br.readLine());
+	            				Sweet s=sweetDao.getSweet(a);
+	            				System.out.println("Category: " +s.getCategory());
+                    			System.out.println("Product: " +s.getProduct());
+                    			System.out.println("Rate: " +s.getRate());
+                    			System.out.println("Offer: " +s.getOffer());
+	                    		System.out.println("________________________________________");
+	                    		break;
+	            			case 5:
+	            	    		System.out.println("Customer Logging Out");
+
+	            				p=false;
+	            				break;
+	            			default:
+	            				System.out.println("Wrong options");
+	            				break;
+	            				
+	            			}
+
+	            		}
+	            		
+	            		}
+	            		else {
+	                    	System.out.println("wrong admin password");
+	                    }
+	            }
+	            catch(Exception e){
+	            	
+	            System.out.println(e);
+
+	        }	
+    	}
+    	else {
+    		System.out.println("Exiting the program");
+    		break;
+    	}
+    }
+    ((ClassPathXmlApplicationContext)context).close();  
+
+    }
+    }
